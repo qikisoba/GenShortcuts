@@ -6,11 +6,24 @@ interface login {
     email: string,
     password: string
 }
+interface register {
+    email: string,
+    password: string
+    fullName: string
+}
 
 export const fetchAuth = createAsyncThunk(
     'auth/fetchAuth',
     async (params: login) => {
         const { data } = await axios.post('auth/login', params)
+        return data
+    }
+)
+
+export const fetchRegister = createAsyncThunk(
+    'auth/fetchRegister',
+    async (params: register) => {
+        const { data } = await axios.post('auth/register', params)
         return data
     }
 )
@@ -49,6 +62,18 @@ const authSlice = createSlice({
                 state.data = null
                 state.loading = false
             })
+            .addCase(fetchRegister.pending, (state) => {
+                state.loading = false
+                state.data = null
+            })
+            .addCase(fetchRegister.fulfilled, (state, action) => {
+                state.data = action.payload
+                state.loading = true
+            })
+            .addCase(fetchRegister.rejected, (state) => {
+                state.data = null
+                state.loading = false
+            })
             .addCase(fetchAuthMe.pending, (state) => {
                 state.loading = false
                 state.data = null
@@ -66,7 +91,17 @@ const authSlice = createSlice({
 
 export const { logout } = authSlice.actions
 
+
+interface User {
+    _id: string;
+    fullName: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+}
 export const selectIsAuth = (state: RootState): boolean => Boolean(state.auth.data);
+export const selectAuth = (state: RootState): User | null => state.auth.data;
 
 export default authSlice.reducer
 

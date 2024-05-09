@@ -1,13 +1,9 @@
-.Header {
-    height: 100px;
-    width: 100%;
-    background-color: rgb(73, 73, 73);
+.Header{
     display: flex;
+    justify-content: space-between;
 }
 
 .head {
-    text-align: center;
-    width: 100px;
+    background-color: rgb(73, 73, 73);
+    display: flex;
 }
-
-

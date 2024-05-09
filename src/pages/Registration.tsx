@@ -1,18 +1,20 @@
 import { useAppDispatch, useAppSelector } from '../hook'
 import React from 'react';
 import { Navigate } from 'react-router-dom'
-import { fetchAuth, selectIsAuth } from '../store/authSlice'
+import { fetchRegister, selectIsAuth } from '../store/authSlice'
 const Home = () => {
     const dispatch = useAppDispatch()
     const isAuth = useAppSelector(selectIsAuth)
-    const [input1, setInput1] = React.useState('dgoskiy@gmail.com');
+    const [input1, setInput1] = React.useState('qawa@gmail.com');
     const [input2, setInput2] = React.useState('artur42r');
-    interface Login {
+    const [input3, setInput3] = React.useState('qawa');
+    interface Register {
         email: string,
         password: string,
+        fullName: string
     }
-    const auth = async (values: Login) => {
-        const data = await dispatch(fetchAuth(values))
+    const reg = async (values: Register) => {
+        const data = await dispatch(fetchRegister(values))
 
         if (!data.payload) {
             return alert("Не удалось авторизоваться")
@@ -23,12 +25,12 @@ const Home = () => {
         } else {
             alert('Ну удалось авторизоваться')
         }
-    }
         if (isAuth) {
             return <Navigate to="/" />
         }
+    }
     return (
-        <div>
+        <>
             <input
                 type="text"
                 value={input1}
@@ -39,8 +41,13 @@ const Home = () => {
                 value={input2}
                 onChange={e => setInput2(e.target.value)}
             />
-            <button onClick={() => auth({ email: input1, password: input2 })}>Войти</button>
-        </div>
+            <input
+                type="text"
+                value={input3}
+                onChange={e => setInput3(e.target.value)}
+            />
+            <button onClick={() => reg({ email: input1, password: input2, fullName: input3 })}>Зарегистрироваться</button>
+        </>
     )
 }
 export default Home

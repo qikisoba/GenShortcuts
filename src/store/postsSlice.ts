@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from './index'
 import axios from '../axios'
 
 
@@ -9,8 +10,11 @@ export const fetchPosts = createAsyncThunk(
         return data
     }
 )
-
-const initialState = {
+interface PostsState {
+    items: [];
+    loading: boolean;
+}
+const initialState: PostsState = {
     items: [],
     loading: false
 }
@@ -34,5 +38,7 @@ const postsSlice = createSlice({
             })
     }
 })
+
+export const selectPosts = (state: RootState) => state.posts.items;
 
 export default postsSlice.reducer
