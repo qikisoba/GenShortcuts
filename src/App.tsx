@@ -7,11 +7,13 @@ import React from 'react'
 
 import { fetchAuthMe, /* selectIsAuth */ } from './store/authSlice'
 import { useAppDispatch, /* useAppSelector */ } from './hook'
+import { fetchPosts } from './store/postsSlice'
 function App() {
   const dispatch = useAppDispatch()
   React.useEffect(() => {
+    dispatch(fetchPosts())
     dispatch(fetchAuthMe())
-  }, [])
+  }, [dispatch])
 
   return (
     <Routes>

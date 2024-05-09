@@ -10,10 +10,25 @@ export const fetchPosts = createAsyncThunk(
         return data
     }
 )
+
+export const fetchCreatePost = createAsyncThunk<
+    { id: string; title: string; text: string; tags: string[] },
+    createPost
+>('posts/fetchCreatePost', async (params) => {
+    const { data } = await axios.post('/posts', params);
+    return data;
+});
 interface PostsState {
-    items: [];
+    items: { id: string; title: string; text: string; tags: string[] }[];
     loading: boolean;
 }
+
+interface createPost {
+    title: string,
+    text: string
+    tags: string[]
+}
+
 const initialState: PostsState = {
     items: [],
     loading: false
@@ -22,7 +37,8 @@ const initialState: PostsState = {
 const postsSlice = createSlice({
     name: 'posts',
     initialState,
-    reducers: {},
+    reducers: {
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchPosts.pending, (state) => {
@@ -34,6 +50,16 @@ const postsSlice = createSlice({
             })
             .addCase(fetchPosts.rejected, (state) => {
                 state.items = []
+                state.loading = false
+            })
+            .addCase(fetchCreatePost.pending, (state) => {
+                state.loading = false
+            })
+            .addCase(fetchCreatePost.fulfilled, (state, action) => {
+                state.items.push(action.payload);
+                state.loading = true;
+            })
+            .addCase(fetchCreatePost.rejected, (state) => {
                 state.loading = false
             })
     }
