@@ -39,8 +39,8 @@ const Post: React.FC = () => {
                 tags: tags.split(' ')
             })}>Post</button>
             {posts.map((el, index) =>
-                <div style={{ display: "flex" }}>
-                    <div key={index}>{el.title}</div>
+                <div key={index} style={{ display: "flex" }}>
+                    <div >{el.title}</div>
                     <button>x</button>
                 </div>
             )}
