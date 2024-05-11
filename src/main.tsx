@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 ReactDOM.createRoot(document.getElementById('root')!).render(
   
   // <BrowserRouter>
-  <BrowserRouter basename="/GenShortcuts/">
+  <BrowserRouter basename="/GenShortcuts">
     <Provider store={store}>
       <App />
     </Provider>
