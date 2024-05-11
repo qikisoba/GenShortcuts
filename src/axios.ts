@@ -1,8 +1,7 @@
 import axios from 'axios'
 
 const instance = axios.create({
-    baseURL: "https://test-back-rho.vercel.app/"
-    // baseURL: "http://localhost:4444/"
+    baseURL: "http://localhost:4444/"
     // baseURL: "https://jsonplaceholder.typicode.com/"
 })
 

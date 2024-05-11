@@ -3,15 +3,9 @@ import { k1, k2, k3, k4, k5, k6 } from '../assets/keybord'
 import useInputActive from '../components/useInputActive';
 import Post from '../components/Post';
 import KeyRow from '../components/KeyRow';
-import { useAppDispatch, useAppSelector } from '../hook'
-import { selectShort, increment } from '../store/shortSlice'
 
 const Create: React.FC = () => {
 
-
-  const dispatch = useAppDispatch()
-
-  const short: { short: { text: string }[], path: string }[] = useAppSelector(selectShort);
   const [isInputActive, handleFocus, handleBlur] = useInputActive();
 
   const [value, setValue] = useState('');
@@ -85,9 +79,7 @@ const Create: React.FC = () => {
       <KeyRow myObject={k5} keys={keys} handle={handle} />
       <KeyRow myObject={k6} keys={keys} handle={handle} />
       <button onClick={() => {
-        dispatch(increment({ short: val, path: value }))
-        console.log(JSON.stringify(short))
-
+        console.log(val)
       }}>Добавить</button>
       {hot && <button>{hot}</button>}
       <input
@@ -107,17 +99,6 @@ const Create: React.FC = () => {
           })
         }}
       />
-      <button>qd</button>
-      {short.map((el, index) =>
-        <div key={index} style={{display:"flex"}}>
-
-          <div>
-            {el.path}
-          </div>
-          <div>{Object.values(el.short).map(item => item.text).join(" + ")}</div>
-        </div>
-
-      )}
       <div><Post /></div>
     </>
   );

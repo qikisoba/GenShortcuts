@@ -18,7 +18,7 @@ const Main = () => {
     }
     return (
         <div className={s.Header}>
-            <button><Link to="/">[Главная]</Link></button>
+            <button><Link to="/">Главная</Link></button>
             <div>
                 {Auth && <button><Link to="create">Создать</Link></button>}
 
