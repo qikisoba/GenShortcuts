@@ -1,25 +1,44 @@
 import React from 'react';
 import s from './index.module.scss'
 import './key.scss'
+import { KeyRowProps } from '../../assets/inteface'
 
-interface KeyRowProps {
-    myObject: { [key: string]: { bool: boolean, text: string } };
-    keys: { [key: string]: { bool: boolean, text: string } };
-    handle: (event: string) => void;
-}
 
-const KeyRow: React.FC<KeyRowProps> = ({ myObject, keys, handle }) => {
+
+const KeyRow: React.FC<KeyRowProps> = ({ keyObjects, keys, setKes, setKeys }) => {
+
+    const handle = (event: string) => {
+        setKeys((prevKeys) => ({
+            ...prevKeys,
+            [event]: {
+                ...prevKeys[event],
+                bool: !keys[event].bool,
+            }
+        }));
+        setKes(prevKes => {
+            if (prevKes.includes(event)) {
+                return prevKes.filter(item => item !== event);
+            } else {
+                return [...prevKes, event];
+            }
+        });
+    }
     return (
-            <div className="keybordrow" >
-                {Object.keys(myObject).map((key) => (
-                    <div className={`${s.key} ${key}`}
-                        onClick={() => handle(key)}
-                        key={key}
-                        style={{ backgroundColor: keys[key]?.bool ? 'orange' : 'gray' }}>
-                        {keys[key]?.text}
-                    </div>
-                ))}
-            </div>
+        <>
+            {keyObjects.map((myObject, key) => (
+                <div className='keybordrow' key={key} >
+                    {Object.keys(myObject).map((i) => (
+                        <div className={`${s.key} ${i}`}
+                            onClick={() => handle(i)}
+                            key={i}
+                            style={{ backgroundColor: !keys[i]?.bool ? 'orange' : 'gray' }}>
+                            {keys[i]?.text}
+                        </div>
+                    ))}
+                </div>
+            ))}
+
+        </>
     );
 };
 

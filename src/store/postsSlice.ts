@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from './index'
 import axios from '../axios'
+import { post, PostsState } from '../assets/inteface'
 
 
 export const fetchPosts = createAsyncThunk(
@@ -11,23 +12,19 @@ export const fetchPosts = createAsyncThunk(
     }
 )
 
-export const fetchCreatePost = createAsyncThunk<
-    { id: string; title: string; text: string; tags: string[] },
-    createPost
+export const fetchCreatePost = createAsyncThunk<post, post
 >('posts/fetchCreatePost', async (params) => {
     const { data } = await axios.post('/posts', params);
     return data;
 });
-interface PostsState {
-    items: { id: string; title: string; text: string; tags: string[] }[];
-    loading: boolean;
-}
 
-interface createPost {
-    title: string,
-    text: string
-    tags: string[]
-}
+export const fetchRemovePost = createAsyncThunk<string, string
+>('posts/fetchRemovePost', async (id) => {
+    await axios.delete(`/posts/${id}`);
+    return id
+});
+
+
 
 const initialState: PostsState = {
     items: [],
@@ -41,6 +38,8 @@ const postsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+
+            //Получение всех статей
             .addCase(fetchPosts.pending, (state) => {
                 state.loading = false
             })
@@ -52,6 +51,8 @@ const postsSlice = createSlice({
                 state.items = []
                 state.loading = false
             })
+
+            //Создание статьи
             .addCase(fetchCreatePost.pending, (state) => {
                 state.loading = false
             })
@@ -62,6 +63,14 @@ const postsSlice = createSlice({
             .addCase(fetchCreatePost.rejected, (state) => {
                 state.loading = false
             })
+
+            //Удаление статьи
+            .addCase(fetchRemovePost.fulfilled, (state, action) => {
+                state.items = state.items.filter(post => post._id !== action.payload);
+            })
+
+
+
     }
 })
 

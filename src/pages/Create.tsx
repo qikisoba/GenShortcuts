@@ -1,39 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { k1, k2, k3, k4, k5, k6 } from '../assets/keybord'
-import useInputActive from '../components/useInputActive';
+import React, { useState/* , useEffect */ } from 'react';
+import KeyPressHandler from '../components/KeyPressHandler';
+import Short from '../components/Short';
+import { useAppDispatch } from '../hook'
+import { increment } from '../store/shortSlice';
+import keyObjects, { k1, k2, k3, k4, k5, k6 } from '../assets/keybord'
 import Post from '../components/Post';
 import KeyRow from '../components/KeyRow';
+import EnterInput from '../components/useInputActive'
+import { keys, kes } from '../assets/inteface';
 
 const Create: React.FC = () => {
-
-  const [isInputActive, handleFocus, handleBlur] = useInputActive();
-
-  const [value, setValue] = useState('');
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-  };
-
-  const [keys, setKeys] = useState<{ [key: string]: { bool: boolean, text: string, sc: string } }>({ ...k1, ...k2, ...k3, ...k4, ...k5, ...k6 });
-  const [kes, setKes] = useState<string[]>([]);
-  const handle = (event: string) => {
-    setKeys((prevKeys) => ({
-      ...prevKeys,
-      [event]: {
-        bool: !keys[event].bool,
-        text: keys[event].text,
-        sc: keys[event].sc
-      }
-    }));
-    setKes(prevKes => {
-      if (prevKes.includes(event)) {
-        return prevKes.filter(item => item !== event);
-      } else {
-        return [...prevKes, event];
-      }
-    });
-
-  }
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [value, setValue] = useState('C:\\Users\\iykis\\Documents\\WEB-porject');
+  const dispatch = useAppDispatch()
+  const [keys, setKeys] = useState<keys>({ ...k1, ...k2, ...k3, ...k4, ...k5, ...k6 });
+  const [kes, setKes] = useState<kes>([]);
 
   const val = Object.fromEntries(
     kes.map(key => [key, keys[key]])
@@ -41,65 +22,46 @@ const Create: React.FC = () => {
 
   const hot = Object.values(val).map(item => item.text).join(" + ")
 
-  useEffect(() => {
 
-    const handleClick = (event: KeyboardEvent) => {
+  const disable = () => {
+    setKeys(Object.fromEntries(Object.keys(keys).map(key => [key, { ...keys[key], bool: true }])));
+    setKes([]);
+  };
 
-      setKeys((prevKeys) => ({
-        ...prevKeys,
-        [event.code]: {
-          bool: !keys[event.code].bool,
-          text: keys[event.code].text,
-          sc: keys[event.code].sc
-        }
-      }));
-
-      setKes(prevKes => {
-        if (prevKes.includes(event.code)) {
-          return prevKes.filter(item => item !== event.code);
-        } else {
-          return [...prevKes, event.code];
-        }
-      });
-    };
-
-    if (!isInputActive) window.addEventListener('keydown', handleClick);
-
-    return () => {
-      window.removeEventListener('keydown', handleClick);
-    };
-  }, [keys, isInputActive]);
+  const add = () => {
+    if ((value != "") && (Object.keys(val).length !== 0)) {
+      {
+        dispatch(increment({ short: val, path: value }))
+        disable()
+      }
+    }
+  }
+  const KeyRowProps = {
+    setKeys,
+    keys,
+    setKes,
+    kes
+  }
 
   return (
     <>
-      <KeyRow myObject={k1} keys={keys} handle={handle} />
-      <KeyRow myObject={k2} keys={keys} handle={handle} />
-      <KeyRow myObject={k3} keys={keys} handle={handle} />
-      <KeyRow myObject={k4} keys={keys} handle={handle} />
-      <KeyRow myObject={k5} keys={keys} handle={handle} />
-      <KeyRow myObject={k6} keys={keys} handle={handle} />
-      <button onClick={() => {
-        console.log(val)
-      }}>Добавить</button>
+      <KeyRow keyObjects={keyObjects} {...KeyRowProps}/>
+
+      <button onClick={disable}>disable</button>
+
+      <button onClick={add}>Добавить</button>
+
       {hot && <button>{hot}</button>}
-      <input
-        className='textinput'
-        type="text"
-        value={value}
-        placeholder='Вставьте путь'
-        onChange={handleInputChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        style={{
-          width: `${value.length * 8}px`,
-          minWidth: '100px',
-          ...(!isInputActive && {
-            border: "none",
-            color: "orange",
-          })
-        }}
-      />
-      <div><Post /></div>
+
+      <div><EnterInput value={value} setValue={setValue} isActive={isActive} setIsActive={setIsActive}
+      /></div>
+
+      <div><Short /></div>
+
+      <div><Post disable={disable} /></div>
+
+      <KeyPressHandler {...KeyRowProps} />
+
     </>
   );
 };

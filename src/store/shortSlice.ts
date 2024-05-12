@@ -1,33 +1,35 @@
 import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+
 import type { RootState } from './index'
 
-interface CounterState {
-  value: number
+import { shortState } from '../assets/inteface'
+
+
+const initialState: shortState = {
+    items: [],
 }
 
-const initialState: CounterState = {
-  value: 0,
-}
+export const shortSlice = createSlice({
+    name: 'short',
+    initialState,
+    reducers: {
+        increment: (state, action) => {
+            state.items.push(action.payload);
+        },
+        decrement: (state, action) => {
+            const indexToRemove = action.payload; // Порядковый номер элемента для удаления
+            state.items.splice(indexToRemove, 1);
+        },
+        disShort: (state) => {
+            state.items = []
+        }
+    },
 
-export const counterSlice = createSlice({
-  name: 'short',
-  initialState,
-  reducers: {
-    increment: (state) => {
-      state.value += 1
-    },
-    decrement: (state) => {
-      state.value -= 1
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload
-    },
-  },
 })
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { increment, decrement, disShort } = shortSlice.actions
 
-export const selectCount = (state: RootState) => state.counter.value
 
-export default counterSlice.reducer
+
+export const selectShort = (state: RootState) => state.short.items;
+export default shortSlice.reducer

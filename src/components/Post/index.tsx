@@ -1,51 +1,57 @@
 import React, { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hook'
-import { fetchCreatePost, selectPosts } from '../../store/postsSlice'
-const Post: React.FC = () => {
-    interface post {
-        title: string,
-        text: string,
-        tags: string[]
-    }
+import { fetchCreatePost, fetchRemovePost, selectPosts } from '../../store/postsSlice'
+import { selectShort, disShort } from '../../store/shortSlice'
+import { post } from '../../assets/inteface'
+
+
+const Post: React.FC<{ disable: () => void }> = ({ disable }) => {
+
     const dispatch = useAppDispatch()
     const posts: post[] = useAppSelector(selectPosts)
+    const short = useAppSelector(selectShort)
+    const [title, setTitle] = useState('');
+    const [text, setText] = useState('');
+    const [tags, setTags] = useState('');
 
-    const [title, setTitle] = useState('hometable');
-    const [text, setText] = useState('большая куча комбинаций');
-    const [tags, setTags] = useState("домашнее");
+    const pst = {
+        _id: "",
+        text: text,
+        title: title,
+        tags: tags.split(' ')
+    }
 
+    const isDouble = posts.some(item => item.text === text);
 
-    const post = async (values: post) => {
-        const data = await dispatch(fetchCreatePost(values))
-        if (!data.payload) {
-            return alert("Не удалось отправить")
+    const post = async () => {
+        if (title != "" && text != "[]" && tags != "" && !isDouble) {
+            const data = await dispatch(fetchCreatePost(pst));
+            if (!data.payload) {
+                return alert("Не удалось отправить");
+            }
+            disable()
+            dispatch(disShort())
         }
     }
 
-
     useEffect(() => {
-
-        console.log(posts)
-    }, [posts])
+        setText(JSON.stringify(short))
+    }, [posts, short, text])
 
     return (
         <>
             <input onChange={e => setTitle(e.target.value)} value={title} type="text" />
-            <input onChange={e => setText(e.target.value)} value={text} type="text" />
             <input onChange={e => setTags(e.target.value)} value={tags} type="text" />
-            <button onClick={() => post({
-                text: text,
-                title: title,
-                tags: tags.split(' ')
-            })}>Post</button>
+            <button onClick={post}>Post</button>
             {posts.map((el, index) =>
-                <div style={{ display: "flex" }}>
-                    <div key={index}>{el.title}</div>
-                    <button>x</button>
-                </div>
+                <div key={index} style={{ display: "flex" }}>
+                    <div >{el.title}</div>
+                    <button onClick={() => dispatch(fetchRemovePost(el._id))}>x</button>
+                </div >
             )}
         </>
     )
 }
 
 export default Post
+

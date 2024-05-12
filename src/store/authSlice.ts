@@ -1,20 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from './index'
 import axios from '../axios'
+import {register, User} from '../assets/inteface'
 
-interface login {
-    email: string,
-    password: string
-}
-interface register {
-    email: string,
-    password: string
-    fullName: string
-}
 
 export const fetchAuth = createAsyncThunk(
     'auth/fetchAuth',
-    async (params: login) => {
+    async (params: register) => {
         const { data } = await axios.post('auth/login', params)
         return data
     }
@@ -92,14 +84,7 @@ const authSlice = createSlice({
 export const { logout } = authSlice.actions
 
 
-interface User {
-    _id: string;
-    fullName: string;
-    email: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-}
+
 export const selectIsAuth = (state: RootState): boolean => Boolean(state.auth.data);
 export const selectAuth = (state: RootState): User | null => state.auth.data;
 
