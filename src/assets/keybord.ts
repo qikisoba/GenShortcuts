@@ -15,8 +15,9 @@ export const k1 = {
     PrintScreen: { bool: true, unbool: true, text: "PrtSc", sc: "sc137" },
     Insert: { bool: true, unbool: true, text: "Ins", sc: "sc152" },
     Delete: { bool: true, unbool: true, text: "Del", sc: "sc153" },
+    NumpadMultiply: { bool: true, unbool: true, text: "*", sc: "sc37" },
     NumpadDivide: { bool: true, unbool: true, text: "/", sc: "sc135" },
-    NumpadMultiply: { bool: true, unbool: true, text: "*", sc: "sc37" }
+    Pwr: { bool: true, unbool: true, text: "pwr", sc: "pwr" },
 }
 
 export const k2 = {

@@ -1,5 +1,4 @@
 import React from 'react';
-import s from './index.module.scss'
 import './key.scss'
 import { KeyRowProps } from '../../assets/inteface'
 
@@ -26,13 +25,13 @@ const KeyRow: React.FC<KeyRowProps> = ({ keyObjects, keys, setKes, setKeys }) =>
     return (
         <>
             {keyObjects.map((myObject, key) => (
-                <div className='keybordrow' key={key} >
-                    {Object.keys(myObject).map((i) => (
-                        <div className={`${s.key} ${i}`}
-                            onClick={() => handle(i)}
-                            key={i}
-                            style={{ backgroundColor: !keys[i]?.bool ? 'orange' : 'gray' }}>
-                            {keys[i]?.text}
+                <div className={`keybordrow n${key}`} key={key} >
+                    {Object.keys(myObject).map((code, i) => (
+                        <div className={`n${key}${i} code`}
+                            onClick={() => handle(code)}
+                            key={code}
+                            style={{ backgroundColor: !keys[code]?.bool ? 'orange' : 'gray' }}>
+                            {keys[code]?.text}
                         </div>
                     ))}
                 </div>
