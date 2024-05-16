@@ -30,7 +30,10 @@ const KeyRow: React.FC<KeyRowProps> = ({ keyObjects, keys, setKes, setKeys }) =>
                         <div className={`n${key}${i} code`}
                             onClick={() => handle(code)}
                             key={code}
-                            style={{ backgroundColor: !keys[code]?.bool ? 'orange' : 'gray' }}>
+                            style={{
+                                // backgroundColor: !keys[code]?.bool ? 'orange' : 'gray',
+                                border: !keys[code]?.bool ? "3px solid rgb(128, 131, 235)" : "1px solid rgb(0, 0, 0)"
+                            }}>
                             {keys[code]?.text}
                         </div>
                     ))}
