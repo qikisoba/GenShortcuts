@@ -55,9 +55,7 @@ export type kes = string[]
 
 export interface setKeys {
     keys: keys;
-    kes: kes;
     setKeys: Dispatch<SetStateAction<keys>>;
-    setKes: Dispatch<SetStateAction<kes>>;
 }
 
 
@@ -74,5 +72,4 @@ export interface KeyRowProps {
     keyObjects: keyObjects[]
     keys: keys;
     setKeys: Dispatch<SetStateAction<keys>>;
-    setKes: Dispatch<SetStateAction<kes>>;
 }

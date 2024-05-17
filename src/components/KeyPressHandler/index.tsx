@@ -1,29 +1,43 @@
 import React, {/*  useState,  */useEffect } from 'react';
 import { setKeys } from '../../assets/inteface';
 
-const KeyPressComponent: React.FC<setKeys> = ({ setKeys, keys, setKes}) => {
+const KeyPressComponent: React.FC<setKeys> = ({ setKeys, keys }) => {
 
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
+
+            const code = ["ShiftLeft", "ShiftRight", "ControlLeft", "MetaLeft", "AltLeft", "AltRight", "ControlRight",]
             if (event.altKey) {
                 event.preventDefault();
             }
             if (keys[event.code].unbool) {
-                setKeys((prevKeys) => ({
-                    ...prevKeys,
-                    [event.code]: {
-                        ...prevKeys[event.code],
-                        bool: !keys[event.code].bool,
-                        unbool: false,
-                    }
-                }));
-                setKes(prevKes => {
-                    if (prevKes.includes(event.code)) {
-                        return prevKes.filter(item => item !== event.code);
-                    } else {
-                        return [...prevKes, event.code];
-                    }
+                setKeys((prevKeys) => {
+                    const updatedKeys = { ...prevKeys }
+                    Object.keys(updatedKeys).forEach((key) => {
+                        if (event.code == key) {
+                            updatedKeys[key] = {
+                                ...prevKeys[key],
+                                bool: !keys[key].bool,
+                                unbool: false,
+                            };
+                        } else if (code.includes(event.code)) {
+                            updatedKeys[event.code] = {
+                                ...prevKeys[event.code],
+                                bool: !keys[event.code].bool,
+                                unbool: false,
+                            }
+                        } else if (!code.includes(key)) {
+                            updatedKeys[key] = {
+                                ...prevKeys[key],
+                                bool: true,
+                            }
+                        }
+                    });
+                    if (updatedKeys.MetaLeft) updatedKeys.MetaLeft.unbool = true
+
+                    return updatedKeys;
                 });
+ 
             }
 
         };
@@ -48,7 +62,7 @@ const KeyPressComponent: React.FC<setKeys> = ({ setKeys, keys, setKes}) => {
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
         };
-    }, [keys, setKeys, setKes]);
+    }, [keys, setKeys]);
 
     return (
         <div>

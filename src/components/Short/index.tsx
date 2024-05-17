@@ -5,6 +5,10 @@ import { decrement, selectShort } from '../../store/shortSlice'
 const Short: React.FC = () => {
     const short = useAppSelector(selectShort)
     const dispatch = useAppDispatch()
+
+
+
+
     return (
         <>
             {short.map((el, i) => <div key={i}>

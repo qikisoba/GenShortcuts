@@ -7,25 +7,27 @@ import keyObjects, { k1, k2, k3, k4, k5, k6 } from '../assets/keybord'
 import Post from '../components/Post';
 import KeyRow from '../components/KeyRow';
 import EnterInput from '../components/useInputActive'
-import { keys, kes } from '../assets/inteface';
+import { keys } from '../assets/inteface';
 
 const Create: React.FC = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
   const [value, setValue] = useState('C:\\Users\\iykis\\Documents\\WEB-porject');
   const dispatch = useAppDispatch()
   const [keys, setKeys] = useState<keys>({ ...k1, ...k2, ...k3, ...k4, ...k5, ...k6 });
-  const [kes, setKes] = useState<kes>([]);
+
 
   const val = Object.fromEntries(
-    kes.map(key => [key, keys[key]])
+    Object.entries(keys).filter(([, value]) => value.bool === false)
   );
-
-  const hot = Object.values(val).map(item => item.text).join(" + ")
-
+  
+  const arr1 = Object.values(val)
+    .filter(obj => obj.bool === false)
+    .map(obj => obj.text);
+  const casm = ['Ctrl', 'Alt', 'Shift', 'Meta']
+  const hot = casm.filter(item => arr1.includes(item)).concat(arr1.filter(item => !casm.includes(item))).join(" + ");
 
   const disable = () => {
     setKeys(Object.fromEntries(Object.keys(keys).map(key => [key, { ...keys[key], bool: true }])));
-    setKes([]);
   };
 
   const add = () => {
@@ -38,14 +40,12 @@ const Create: React.FC = () => {
   }
   const KeyRowProps = {
     setKeys,
-    keys,
-    setKes,
-    kes
+    keys
   }
 
   return (
     <>
-      <KeyRow keyObjects={keyObjects} {...KeyRowProps}/>
+      <KeyRow keyObjects={keyObjects} {...KeyRowProps} />
 
       <button onClick={disable}>disable</button>
 
